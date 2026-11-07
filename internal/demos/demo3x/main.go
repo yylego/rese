@@ -15,7 +15,7 @@ import (
 func lookupValue(key string) (string, bool) {
 	data := map[string]string{
 		"name": "Alice",
-		"city": "Shanghai",
+		"team": "Platform",
 		"role": "Engineer",
 	}
 	value, ok := data[key]
@@ -110,9 +110,9 @@ func main() {
 	//
 	// 示例 6: 使用 resb 的简洁内联用法
 	// 演示不使用中间变量的简洁映射查找
-	message := fmt.Sprintf("%s from %s works as %s",
+	message := fmt.Sprintf("%s in team %s works as %s",
 		resb.V1(lookupValue("name")),
-		resb.V1(lookupValue("city")),
+		resb.V1(lookupValue("team")),
 		resb.V1(lookupValue("role")))
 	fmt.Println(message)
 }

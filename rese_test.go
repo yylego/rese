@@ -1,11 +1,54 @@
 package rese_test
 
 import (
+	"io/fs"
+	"os"
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 	"github.com/yylego/rese"
+	"github.com/yylego/zaplog"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"go.uber.org/zap/zaptest/observer"
 )
+
+// expectPanic runs the check, which must panic with an error, and gives back that error
+// It also checks the check writes one PANIC log, pointing at the test file that invokes expectPanic, not at a line inside rese
+//
+// expectPanic 执行检查（它必须用 error panic），返回这个 error
+// 同时检查它只写了一条 PANIC 日志，位置指向调用 expectPanic 的测试文件，而不是 rese 内部的某一行
+func expectPanic(t *testing.T, check func()) (cause error) {
+	_, path, _, ok := runtime.Caller(1)
+	require.True(t, ok)
+
+	core, logs := observer.New(zapcore.DebugLevel)
+	saved := zaplog.LOGS
+	zaplog.LOGS = zaplog.NewSkipLogs(zap.New(core, zap.AddCaller()))
+	defer func() {
+		zaplog.LOGS = saved
+		value := recover()
+		require.NotNil(t, value)
+		var isError bool
+		cause, isError = value.(error)
+		require.True(t, isError, "panic value %#v is not an error", value)
+
+		entries := logs.TakeAll()
+		require.Len(t, entries, 1)
+		require.Equal(t, zapcore.PanicLevel, entries[0].Level)
+		require.Equal(t, path, entries[0].Caller.File)
+	}()
+	check()
+	return nil
+}
+
+// statMissing stats a file that is not there, giving a genuine error
+// statMissing 查看一个不存在的文件，得到一个真实的错误
+func statMissing(t *testing.T) (os.FileInfo, error) {
+	return os.Stat(filepath.Join(t.TempDir(), "missing.txt"))
+}
 
 func TestV0(t *testing.T) {
 	run := func() error {
@@ -15,6 +58,11 @@ func TestV0(t *testing.T) {
 	rese.V0(run())
 }
 
+func TestV0_WithError(t *testing.T) {
+	cause := expectPanic(t, func() { rese.V0(os.Remove(filepath.Join(t.TempDir(), "missing.txt"))) })
+	require.ErrorIs(t, cause, fs.ErrNotExist)
+}
+
 func TestV1(t *testing.T) {
 	run := func() (string, error) {
 		return "a", nil
@@ -22,6 +70,11 @@ func TestV1(t *testing.T) {
 
 	v1 := rese.V1(run())
 	require.Equal(t, "a", v1)
+}
+
+func TestV1_WithError(t *testing.T) {
+	cause := expectPanic(t, func() { rese.V1(statMissing(t)) })
+	require.ErrorIs(t, cause, fs.ErrNotExist)
 }
 
 func TestV2(t *testing.T) {
@@ -148,6 +201,14 @@ func TestP1(t *testing.T) {
 
 	p1 := rese.P1(run())
 	require.Equal(t, "hello", *p1)
+}
+
+func TestP1_WithNil(t *testing.T) {
+	run := func() (*string, error) {
+		return nil, nil // Found nothing, and no error // 什么也没找到，也没出错
+	}
+
+	require.Error(t, expectPanic(t, func() { rese.P1(run()) }))
 }
 
 func TestP2(t *testing.T) {
@@ -319,6 +380,14 @@ func TestC1(t *testing.T) {
 	require.Equal(t, "hello", v1)
 }
 
+func TestC1_WithZero(t *testing.T) {
+	run := func() (string, error) {
+		return "", nil
+	}
+
+	require.Error(t, expectPanic(t, func() { rese.C1(run()) }))
+}
+
 func TestC2(t *testing.T) {
 	run := func() (int, float64, error) {
 		return 42, 3.14, nil
@@ -442,6 +511,14 @@ func TestA1(t *testing.T) {
 
 	v1 := rese.A1(run())
 	require.Equal(t, []string{"a"}, v1)
+}
+
+func TestA1_WithNoItems(t *testing.T) {
+	run := func() ([]string, error) {
+		return []string{}, nil
+	}
+
+	require.Error(t, expectPanic(t, func() { rese.A1(run()) }))
 }
 
 func TestA2(t *testing.T) {

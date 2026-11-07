@@ -1,9 +1,13 @@
+<!-- TEMPLATE (EN) BEGIN: BADGES -->
+
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/yylego/rese/release.yml?branch=main&label=BUILD)](https://github.com/yylego/rese/actions/workflows/release.yml?query=branch%3Amain)
 [![GoDoc](https://pkg.go.dev/badge/github.com/yylego/rese)](https://pkg.go.dev/github.com/yylego/rese)
-[![Coverage Status](https://img.shields.io/coveralls/github/yylego/rese/master.svg)](https://coveralls.io/github/yylego/rese?branch=main)
-[![Supported Go Versions](https://img.shields.io/badge/Go-1.25+-lightgrey.svg)](https://go.dev/)
+[![Coverage Status](https://img.shields.io/coveralls/github/yylego/rese/main.svg)](https://coveralls.io/github/yylego/rese?branch=main)
+[![Supported Go Versions](https://img.shields.io/badge/Go-1.22%2B-lightgrey.svg)](https://go.dev/)
 [![GitHub Release](https://img.shields.io/github/release/yylego/rese.svg)](https://github.com/yylego/rese/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/yylego/rese)](https://goreportcard.com/report/github.com/yylego/rese)
+
+<!-- TEMPLATE (EN) CLOSE: BADGES -->
 
 # rese
 
@@ -11,9 +15,10 @@
 
 Transform verbose error checking into clean, expressive code.
 
-## Why rese?
+## Design Intent
 
 **Traditional Go error handling:**
+
 ```go
 num, err := getNumber()
 if err != nil {
@@ -29,6 +34,7 @@ result := fmt.Sprintf("%s: %d", text, num)
 ```
 
 **With rese:**
+
 ```go
 result := fmt.Sprintf("%s: %d", rese.V1(getText()), rese.V1(getNumber()))
 ```
@@ -38,10 +44,12 @@ Clean, concise, and safe!
 ---
 
 <!-- TEMPLATE (EN) BEGIN: LANGUAGE NAVIGATION -->
+
 ## CHINESE README
 
 [中文说明](README.zh.md)
-<!-- TEMPLATE (EN) END: LANGUAGE NAVIGATION -->
+
+<!-- TEMPLATE (EN) CLOSE: LANGUAGE NAVIGATION -->
 
 ---
 
@@ -83,25 +91,29 @@ count := rese.C1(getCount())  // Returns non-zero value and panics when error/ze
 
 rese provides multiple function series (0-9 parameters each) for different validation needs:
 
-| Series | Purpose | Example Usage |
-|--------|---------|---------------|
-| **V** (Value) | Check error, return value(s) | `rese.V1(getValue())` |
-| **P** (Pointer) | Check error + pointer non-nil | `rese.P1(getPointer())` |
-| **C** (Comparable) | Check error + value non-zero | `rese.C1(getCount())` |
-| **A** (Array/Slice) | Check error + slice has elements | `rese.A1(getItems())` |
-| **M** (Map) | Check error + map has entries | `rese.M1(getMapping())` |
-| **F** (Function) | Execute function + V series | `rese.F1(getValue)` |
-| **R** (Run pointer) | Execute function + P series | `rese.R1(getPointer)` |
+| Series              | Purpose                          | Example Usage           |
+| ------------------- | -------------------------------- | ----------------------- |
+| **V** (Value)       | Check error, return value(s)     | `rese.V1(getValue())`   |
+| **P** (Pointer)     | Check error + pointer non-nil    | `rese.P1(getPointer())` |
+| **C** (Comparable)  | Check error + value non-zero     | `rese.C1(getCount())`   |
+| **A** (Array/Slice) | Check error + slice has elements | `rese.A1(getItems())`   |
+| **M** (Map)         | Check error + map has entries    | `rese.M1(getMapping())` |
+| **F** (Function)    | Execute function + V series      | `rese.F1(getValue)`     |
+| **R** (Run pointer) | Execute function + P series      | `rese.R1(getPointer)`   |
 
 ### resb Subpackage (Boolean Results)
 
 Handle `(value, bool)` return patterns:
 
-| Series | Purpose | Example Usage |
-|--------|---------|---------------|
-| **resb.V** | Check bool, return value(s) | `resb.V1(getValue())` |
+| Series     | Purpose                      | Example Usage           |
+| ---------- | ---------------------------- | ----------------------- |
+| **resb.V** | Check bool, return value(s)  | `resb.V1(getValue())`   |
 | **resb.P** | Check bool + pointer non-nil | `resb.P1(getPointer())` |
-| **resb.C** | Check bool + value non-zero | `resb.C1(getCount())` |
+| **resb.C** | Check bool + value non-zero  | `resb.C1(getCount())`   |
+
+### Panic Outcome
+
+When a check fails, rese writes a PANIC log that points at the line of business code that calls rese, then panics with an `error`. Given an error, the V, P, C, A, M, F and R series panic with that same error, so `errors.Is` and `errors.As` work on the value `recover()` gets back.
 
 ---
 
@@ -246,7 +258,7 @@ import (
 func lookupValue(key string) (string, bool) {
 	data := map[string]string{
 		"name": "Alice",
-		"city": "Shanghai",
+		"team": "Platform",
 		"role": "Engineer",
 	}
 	value, ok := data[key]
@@ -311,9 +323,9 @@ func main() {
 
 	// Example 6: Compact inline usage with resb
 	// Demonstrates clean map lookup without intermediate variables
-	message := fmt.Sprintf("%s from %s works as %s",
+	message := fmt.Sprintf("%s in team %s works as %s",
 		resb.V1(lookupValue("name")),
-		resb.V1(lookupValue("city")),
+		resb.V1(lookupValue("team")),
 		resb.V1(lookupValue("role")))
 	fmt.Println(message)
 }
@@ -328,12 +340,14 @@ func main() {
 ### C Series - Comparable Value Validation
 
 **Check non-zero integer:**
+
 ```go
 userID := rese.C1(getUserID())  // Returns 12345, panics if error or zero
 fmt.Println("User ID:", userID)
 ```
 
 **Validate multiple comparable values:**
+
 ```go
 id, status := rese.C2(getIDAndStatus())  // Both must be non-zero
 ```
@@ -341,6 +355,7 @@ id, status := rese.C2(getIDAndStatus())  // Both must be non-zero
 ### A Series - Array/Slice Validation
 
 **Ensure slice has elements:**
+
 ```go
 items := rese.A1(getItems())  // Returns []string{"apple", "banana", "orange"}
 fmt.Println("Items:", items)
@@ -349,6 +364,7 @@ fmt.Println("Items:", items)
 ### M Series - Map Validation
 
 **Ensure map has entries:**
+
 ```go
 scores := rese.M1(getScores())  // Returns map[string]int{"math": 95, "english": 88}
 fmt.Println("Scores:", scores)
@@ -357,12 +373,14 @@ fmt.Println("Scores:", scores)
 ### F Series - Function Execution
 
 **Execute function and validate:**
+
 ```go
 data := rese.F1(fetchData)  // Executes fetchData(), returns "data loaded"
 fmt.Println(data)
 ```
 
 **Execute with multiple returns:**
+
 ```go
 user, config := rese.F2(initialize)  // Executes and validates two values
 ```
@@ -370,14 +388,16 @@ user, config := rese.F2(initialize)  // Executes and validates two values
 ### Boolean Result Handling (resb)
 
 **Handle map lookup results:**
+
 ```go
 value := resb.V1(lookupValue())  // Returns "found", panics if not found
 fmt.Println("Value:", value)
 ```
 
-**Check bool flag:**
+**Read an environment variable that must be set:**
+
 ```go
-config := resb.V1(m["key"])  // Panics if key doesn't exist
+home := resb.V1(os.LookupEnv("HOME"))  // Panics if HOME is not set
 ```
 
 ---
@@ -386,71 +406,71 @@ config := resb.V1(m["key"])  // Panics if key doesn't exist
 
 ### V Series - Value Validation
 
-| Function | Description |
-|----------|-------------|
-| `V1[T1](v1 T1, err) T1` | Check error, return 1 value |
-| `V2[T1,T2](v1 T1, v2 T2, err) (T1,T2)` | Check error, return 2 values |
-| `V3` ~ `V9` | Check error, return 3-9 values |
+| Function                               | Description                    |
+| -------------------------------------- | ------------------------------ |
+| `V1[T1](v1 T1, err) T1`                | Check error, return 1 value    |
+| `V2[T1,T2](v1 T1, v2 T2, err) (T1,T2)` | Check error, return 2 values   |
+| `V3` ~ `V9`                            | Check error, return 3-9 values |
 
 > **Note:** For `V0(err error)` with no return value, consider using [must](https://github.com/yylego/must) package instead.
 
 ### P Series - Pointer Validation
 
-| Function | Description |
-|----------|-------------|
-| `P1[T1](v1 *T1, err) *T1` | Check error + pointer non-nil, return 1 pointer |
-| `P2[T1,T2](v1 *T1, v2 *T2, err) (*T1,*T2)` | Check error + pointers non-nil, return 2 pointers |
-| `P3` ~ `P9` | Check error + pointers non-nil, return 3-9 pointers |
+| Function                                   | Description                                         |
+| ------------------------------------------ | --------------------------------------------------- |
+| `P1[T1](v1 *T1, err) *T1`                  | Check error + pointer non-nil, return 1 pointer     |
+| `P2[T1,T2](v1 *T1, v2 *T2, err) (*T1,*T2)` | Check error + pointers non-nil, return 2 pointers   |
+| `P3` ~ `P9`                                | Check error + pointers non-nil, return 3-9 pointers |
 
 > **Note:** `P0` is same as `V0`, use [must](https://github.com/yylego/must) package for simple error checking.
 
 ### C Series - Comparable Validation
 
-| Function | Description |
-|----------|-------------|
-| `C1[T1 comparable](v1 T1, err) T1` | Check error + value non-zero, return 1 value |
-| `C2[T1,T2 comparable](v1 T1, v2 T2, err) (T1,T2)` | Check error + values non-zero, return 2 values |
-| `C3` ~ `C9` | Check error + values non-zero, return 3-9 values |
+| Function                                          | Description                                      |
+| ------------------------------------------------- | ------------------------------------------------ |
+| `C1[T1 comparable](v1 T1, err) T1`                | Check error + value non-zero, return 1 value     |
+| `C2[T1,T2 comparable](v1 T1, v2 T2, err) (T1,T2)` | Check error + values non-zero, return 2 values   |
+| `C3` ~ `C9`                                       | Check error + values non-zero, return 3-9 values |
 
 > **Note:** `C0` is same as `V0`, use [must](https://github.com/yylego/must) package for simple error checking.
 
 ### A Series - Array/Slice Validation
 
-| Function | Description |
-|----------|-------------|
-| `A1[T1](v1 []T1, err) []T1` | Check error + slice has elements, return 1 slice |
-| `A2[T1,T2](v1 []T1, v2 []T2, err) ([]T1,[]T2)` | Check error + slices have elements, return 2 slices |
-| `A3` ~ `A9` | Check error + slices have elements, return 3-9 slices |
+| Function                                       | Description                                           |
+| ---------------------------------------------- | ----------------------------------------------------- |
+| `A1[T1](v1 []T1, err) []T1`                    | Check error + slice has elements, return 1 slice      |
+| `A2[T1,T2](v1 []T1, v2 []T2, err) ([]T1,[]T2)` | Check error + slices have elements, return 2 slices   |
+| `A3` ~ `A9`                                    | Check error + slices have elements, return 3-9 slices |
 
 > **Note:** `A0` is same as `V0`, use [must](https://github.com/yylego/must) package for simple error checking.
 
 ### M Series - Map Validation
 
-| Function | Description |
-|----------|-------------|
-| `M1[K1,V1](m1 map[K1]V1, err) map[K1]V1` | Check error + map has entries, return 1 map |
-| `M2[K1,K2,V1,V2](m1 map[K1]V1, m2 map[K2]V2, err) (map[K1]V1, map[K2]V2)` | Check error + maps have entries, return 2 maps |
-| `M3` ~ `M9` | Check error + maps have entries, return 3-9 maps |
+| Function                                                                  | Description                                      |
+| ------------------------------------------------------------------------- | ------------------------------------------------ |
+| `M1[K1,V1](m1 map[K1]V1, err) map[K1]V1`                                  | Check error + map has entries, return 1 map      |
+| `M2[K1,K2,V1,V2](m1 map[K1]V1, m2 map[K2]V2, err) (map[K1]V1, map[K2]V2)` | Check error + maps have entries, return 2 maps   |
+| `M3` ~ `M9`                                                               | Check error + maps have entries, return 3-9 maps |
 
 > **Note:** `M0` is same as `V0`, use [must](https://github.com/yylego/must) package for simple error checking.
 
 ### F Series - Function Execution (Value)
 
-| Function | Description |
-|----------|-------------|
-| `F1[T1](run func() (T1, error)) T1` | Execute function, apply V1 validation |
-| `F2[T1,T2](run func() (T1, T2, error)) (T1,T2)` | Execute function, apply V2 validation |
-| `F3` ~ `F9` | Execute function, apply V3-V9 validation |
+| Function                                        | Description                              |
+| ----------------------------------------------- | ---------------------------------------- |
+| `F1[T1](run func() (T1, error)) T1`             | Execute function, apply V1 validation    |
+| `F2[T1,T2](run func() (T1, T2, error)) (T1,T2)` | Execute function, apply V2 validation    |
+| `F3` ~ `F9`                                     | Execute function, apply V3-V9 validation |
 
 > **Note:** `F0` is same as `V0`, use [must](https://github.com/yylego/must) package for simple error checking.
 
 ### R Series - Function Execution (Pointer)
 
-| Function | Description |
-|----------|-------------|
-| `R1[T1](run func() (*T1, error)) *T1` | Execute function, apply P1 validation |
-| `R2[T1,T2](run func() (*T1, *T2, error)) (*T1,*T2)` | Execute function, apply P2 validation |
-| `R3` ~ `R9` | Execute function, apply P3-P9 validation |
+| Function                                            | Description                              |
+| --------------------------------------------------- | ---------------------------------------- |
+| `R1[T1](run func() (*T1, error)) *T1`               | Execute function, apply P1 validation    |
+| `R2[T1,T2](run func() (*T1, *T2, error)) (*T1,*T2)` | Execute function, apply P2 validation    |
+| `R3` ~ `R9`                                         | Execute function, apply P3-P9 validation |
 
 > **Note:** `R0` is same as `V0`, use [must](https://github.com/yylego/must) package for simple error checking.
 
@@ -495,20 +515,20 @@ Each package targets different use cases, from quick prototyping to production s
 ---
 
 <!-- TEMPLATE (EN) BEGIN: STANDARD PROJECT FOOTER -->
-<!-- VERSION 2025-09-26 07:39:27.188023 +0000 UTC -->
+<!-- VERSION 2025-11-25 03:52:28.131064 +0000 UTC -->
 
 ## 📄 License
 
-MIT License. See [LICENSE](LICENSE).
+MIT License - see [LICENSE](LICENSE).
 
 ---
 
-## 🤝 Contributing
+## 💬 Contact & Feedback
 
 Contributions are welcome! Report bugs, suggest features, and contribute code:
 
-- 🐛 **Found a mistake?** Open an issue on GitHub with reproduction steps
-- 💡 **Have a feature idea?** Create an issue to discuss the suggestion
+- 🐛 **Mistake reports?** Open an issue on GitHub with reproduction steps
+- 💡 **Fresh ideas?** Create an issue to discuss
 - 📖 **Documentation confusing?** Report it so we can improve
 - 🚀 **Need new features?** Share the use cases to help us understand requirements
 - ⚡ **Performance issue?** Help us optimize through reporting slow operations
@@ -524,12 +544,12 @@ Contributions are welcome! Report bugs, suggest features, and contribute code:
 New code contributions, follow this process:
 
 1. **Fork**: Fork the repo on GitHub (using the webpage UI).
-2. **Clone**: Clone the forked project (`git clone https://github.com/yourname/rese.git`).
-3. **Navigate**: Navigate to the cloned project (`cd rese`)
+2. **Clone**: Clone the forked project (`git clone https://github.com/yourname/repo-name.git`).
+3. **Navigate**: Navigate to the cloned project (`cd repo-name`)
 4. **Branch**: Create a feature branch (`git checkout -b feature/xxx`).
 5. **Code**: Implement the changes with comprehensive tests
 6. **Testing**: (Golang project) Ensure tests pass (`go test ./...`) and follow Go code style conventions
-7. **Documentation**: Update documentation to support client-facing changes and use significant commit messages
+7. **Documentation**: Update documentation to support client-facing changes
 8. **Stage**: Stage changes (`git add .`)
 9. **Commit**: Commit changes (`git commit -m "Add feature xxx"`) ensuring backward compatible code
 10. **Push**: Push to the branch (`git push origin feature/xxx`).
@@ -552,10 +572,4 @@ Welcome to contribute to this project via submitting merge requests and reportin
 
 **Have Fun Coding with this package!** 🎉🎉🎉
 
-<!-- TEMPLATE (EN) END: STANDARD PROJECT FOOTER -->
-
----
-
-## GitHub Stars
-
-[![starring](https://starchart.cc/yylego/rese.svg?variant=adaptive)](https://starchart.cc/yylego/rese)
+<!-- TEMPLATE (EN) CLOSE: STANDARD PROJECT FOOTER -->

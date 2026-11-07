@@ -1,11 +1,46 @@
 package resb_test
 
 import (
+	"os"
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 	"github.com/yylego/rese/resb"
+	"github.com/yylego/zaplog"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"go.uber.org/zap/zaptest/observer"
 )
+
+// expectPanic runs the check, which must panic with an error, and gives back that error
+// It also checks the check writes one PANIC log, pointing at the test file that invokes expectPanic, not at a line inside resb
+//
+// expectPanic 执行检查（它必须用 error panic），返回这个 error
+// 同时检查它只写了一条 PANIC 日志，位置指向调用 expectPanic 的测试文件，而不是 resb 内部的某一行
+func expectPanic(t *testing.T, check func()) (cause error) {
+	_, path, _, ok := runtime.Caller(1)
+	require.True(t, ok)
+
+	core, logs := observer.New(zapcore.DebugLevel)
+	saved := zaplog.LOGS
+	zaplog.LOGS = zaplog.NewSkipLogs(zap.New(core, zap.AddCaller()))
+	defer func() {
+		zaplog.LOGS = saved
+		value := recover()
+		require.NotNil(t, value)
+		var isError bool
+		cause, isError = value.(error)
+		require.True(t, isError, "panic value %#v is not an error", value)
+
+		entries := logs.TakeAll()
+		require.Len(t, entries, 1)
+		require.Equal(t, zapcore.PanicLevel, entries[0].Level)
+		require.Equal(t, path, entries[0].Caller.File)
+	}()
+	check()
+	return nil
+}
 
 func TestV0(t *testing.T) {
 	run := func() bool {
@@ -22,6 +57,13 @@ func TestV1(t *testing.T) {
 
 	v1 := resb.V1(run())
 	require.Equal(t, "a", v1)
+}
+
+func TestV1_WithFalse(t *testing.T) {
+	const missingName = "RESE_RESB_TEST_MISSING_ENV"
+	require.NoError(t, os.Unsetenv(missingName))
+
+	require.Error(t, expectPanic(t, func() { resb.V1(os.LookupEnv(missingName)) }))
 }
 
 func TestV2(t *testing.T) {
@@ -148,6 +190,14 @@ func TestP1(t *testing.T) {
 
 	p1 := resb.P1(run())
 	require.Equal(t, "hello", *p1)
+}
+
+func TestP1_WithNil(t *testing.T) {
+	run := func() (*string, bool) {
+		return nil, true
+	}
+
+	require.Error(t, expectPanic(t, func() { resb.P1(run()) }))
 }
 
 func TestP2(t *testing.T) {
@@ -317,6 +367,14 @@ func TestC1(t *testing.T) {
 
 	v1 := resb.C1(run())
 	require.Equal(t, "hello", v1)
+}
+
+func TestC1_WithZero(t *testing.T) {
+	run := func() (string, bool) {
+		return "", true
+	}
+
+	require.Error(t, expectPanic(t, func() { resb.C1(run()) }))
 }
 
 func TestC2(t *testing.T) {

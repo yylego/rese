@@ -1,9 +1,13 @@
+<!-- TEMPLATE (ZH) BEGIN: BADGES -->
+
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/yylego/rese/release.yml?branch=main&label=BUILD)](https://github.com/yylego/rese/actions/workflows/release.yml?query=branch%3Amain)
 [![GoDoc](https://pkg.go.dev/badge/github.com/yylego/rese)](https://pkg.go.dev/github.com/yylego/rese)
-[![Coverage Status](https://img.shields.io/coveralls/github/yylego/rese/master.svg)](https://coveralls.io/github/yylego/rese?branch=main)
-[![Supported Go Versions](https://img.shields.io/badge/Go-1.25+-lightgrey.svg)](https://go.dev/)
+[![Coverage Status](https://img.shields.io/coveralls/github/yylego/rese/main.svg)](https://coveralls.io/github/yylego/rese?branch=main)
+[![Supported Go Versions](https://img.shields.io/badge/Go-1.22%2B-lightgrey.svg)](https://go.dev/)
 [![GitHub Release](https://img.shields.io/github/release/yylego/rese.svg)](https://github.com/yylego/rese/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/yylego/rese)](https://goreportcard.com/report/github.com/yylego/rese)
+
+<!-- TEMPLATE (ZH) CLOSE: BADGES -->
 
 # rese
 
@@ -11,9 +15,10 @@
 
 将冗长的错误检查转换为简洁、富有表现力的代码。
 
-## 为什么选择 rese？
+## 设计意图
 
 **传统 Go 错误处理：**
+
 ```go
 num, err := getNumber()
 if err != nil {
@@ -29,6 +34,7 @@ result := fmt.Sprintf("%s: %d", text, num)
 ```
 
 **使用 rese：**
+
 ```go
 result := fmt.Sprintf("%s: %d", rese.V1(getText()), rese.V1(getNumber()))
 ```
@@ -38,10 +44,12 @@ result := fmt.Sprintf("%s: %d", rese.V1(getText()), rese.V1(getNumber()))
 ---
 
 <!-- TEMPLATE (ZH) BEGIN: LANGUAGE NAVIGATION -->
-## English README
+
+## 英文文档
 
 [ENGLISH README](README.md)
-<!-- TEMPLATE (ZH) END: LANGUAGE NAVIGATION -->
+
+<!-- TEMPLATE (ZH) CLOSE: LANGUAGE NAVIGATION -->
 
 ---
 
@@ -83,25 +91,29 @@ count := rese.C1(getCount())  // 返回非零值或 panic
 
 rese 提供多个函数系列（每个系列支持 0-9 个参数）满足不同的验证需求：
 
-| 系列 | 用途 | 使用示例 |
-|------|------|----------|
-| **V** (Value) | 检查错误，返回值 | `rese.V1(getValue())` |
-| **P** (Pointer) | 检查错误 + 指针非 nil | `rese.P1(getPointer())` |
-| **C** (Comparable) | 检查错误 + 值非零 | `rese.C1(getCount())` |
-| **A** (Array/Slice) | 检查错误 + 切片非空 | `rese.A1(getItems())` |
-| **M** (Map) | 检查错误 + 映射非空 | `rese.M1(getMapping())` |
-| **F** (Function) | 执行函数 + V 系列验证 | `rese.F1(getValue)` |
-| **R** (Run pointer) | 执行函数 + P 系列验证 | `rese.R1(getPointer)` |
+| 系列                | 用途                  | 使用示例                |
+| ------------------- | --------------------- | ----------------------- |
+| **V** (Value)       | 检查错误，返回值      | `rese.V1(getValue())`   |
+| **P** (Pointer)     | 检查错误 + 指针非 nil | `rese.P1(getPointer())` |
+| **C** (Comparable)  | 检查错误 + 值非零     | `rese.C1(getCount())`   |
+| **A** (Array/Slice) | 检查错误 + 切片非空   | `rese.A1(getItems())`   |
+| **M** (Map)         | 检查错误 + 映射非空   | `rese.M1(getMapping())` |
+| **F** (Function)    | 执行函数 + V 系列验证 | `rese.F1(getValue)`     |
+| **R** (Run pointer) | 执行函数 + P 系列验证 | `rese.R1(getPointer)`   |
 
 ### resb 子包（布尔结果）
 
 处理 `(value, bool)` 返回模式：
 
-| 系列 | 用途 | 使用示例 |
-|------|------|----------|
-| **resb.V** | 检查布尔值，返回值 | `resb.V1(getValue())` |
+| 系列       | 用途                    | 使用示例                |
+| ---------- | ----------------------- | ----------------------- |
+| **resb.V** | 检查布尔值，返回值      | `resb.V1(getValue())`   |
 | **resb.P** | 检查布尔值 + 指针非 nil | `resb.P1(getPointer())` |
-| **resb.C** | 检查布尔值 + 值非零 | `resb.C1(getCount())` |
+| **resb.C** | 检查布尔值 + 值非零     | `resb.C1(getCount())`   |
+
+### 失败行为
+
+检查不通过时，rese 先写一条 PANIC 日志，位置指向业务代码里调用 rese 的那一行，然后用 `error` panic。V、P、C、A、M、F、R 系列遇到错误时用原始错误本身 panic，`recover()` 拿到的值照常可以用 `errors.Is` 和 `errors.As` 判断。
 
 ---
 
@@ -246,7 +258,7 @@ import (
 func lookupValue(key string) (string, bool) {
 	data := map[string]string{
 		"name": "Alice",
-		"city": "Shanghai",
+		"team": "Platform",
 		"role": "Engineer",
 	}
 	value, ok := data[key]
@@ -311,9 +323,9 @@ func main() {
 
 	// 示例 6: 使用 resb 的简洁内联用法
 	// 演示不使用中间变量的简洁映射查找
-	message := fmt.Sprintf("%s from %s works as %s",
+	message := fmt.Sprintf("%s in team %s works as %s",
 		resb.V1(lookupValue("name")),
-		resb.V1(lookupValue("city")),
+		resb.V1(lookupValue("team")),
 		resb.V1(lookupValue("role")))
 	fmt.Println(message)
 }
@@ -328,12 +340,14 @@ func main() {
 ### C 系列 - 可比较值验证
 
 **检查非零整数：**
+
 ```go
 userID := rese.C1(getUserID())  // 返回 12345，如果错误或零值则 panic
 fmt.Println("User ID:", userID)
 ```
 
 **验证多个可比较值：**
+
 ```go
 id, status := rese.C2(getIDAndStatus())  // 两者都必须非零
 ```
@@ -341,6 +355,7 @@ id, status := rese.C2(getIDAndStatus())  // 两者都必须非零
 ### A 系列 - 数组/切片验证
 
 **确保切片有元素：**
+
 ```go
 items := rese.A1(getItems())  // 返回 []string{"apple", "banana", "orange"}
 fmt.Println("Items:", items)
@@ -349,6 +364,7 @@ fmt.Println("Items:", items)
 ### M 系列 - 映射验证
 
 **确保映射有条目：**
+
 ```go
 scores := rese.M1(getScores())  // 返回 map[string]int{"math": 95, "english": 88}
 fmt.Println("Scores:", scores)
@@ -357,12 +373,14 @@ fmt.Println("Scores:", scores)
 ### F 系列 - 函数执行
 
 **执行函数并验证：**
+
 ```go
 data := rese.F1(fetchData)  // 执行 fetchData()，返回 "data loaded"
 fmt.Println(data)
 ```
 
 **执行并返回多个值：**
+
 ```go
 user, config := rese.F2(initialize)  // 执行并验证两个值
 ```
@@ -370,14 +388,16 @@ user, config := rese.F2(initialize)  // 执行并验证两个值
 ### 布尔结果处理（resb）
 
 **处理映射查找结果：**
+
 ```go
 value := resb.V1(lookupValue())  // 返回 "found"，如果未找到则 panic
 fmt.Println("Value:", value)
 ```
 
-**检查布尔标志：**
+**读取必须设置的环境变量：**
+
 ```go
-config := resb.V1(m["key"])  // 键不存在时 panic
+home := resb.V1(os.LookupEnv("HOME"))  // HOME 没有设置时 panic
 ```
 
 ---
@@ -386,71 +406,71 @@ config := resb.V1(m["key"])  // 键不存在时 panic
 
 ### V 系列 - 值验证
 
-| 函数 | 说明 |
-|------|------|
-| `V1[T1](v1 T1, err) T1` | 检查错误，返回 1 个值 |
-| `V2[T1,T2](v1 T1, v2 T2, err) (T1,T2)` | 检查错误，返回 2 个值 |
-| `V3` ~ `V9` | 检查错误，返回 3-9 个值 |
+| 函数                                   | 说明                    |
+| -------------------------------------- | ----------------------- |
+| `V1[T1](v1 T1, err) T1`                | 检查错误，返回 1 个值   |
+| `V2[T1,T2](v1 T1, v2 T2, err) (T1,T2)` | 检查错误，返回 2 个值   |
+| `V3` ~ `V9`                            | 检查错误，返回 3-9 个值 |
 
 > **说明：** 对于无返回值的 `V0(err error)`，建议使用 [must](https://github.com/yylego/must) 包。
 
 ### P 系列 - 指针验证
 
-| 函数 | 说明 |
-|------|------|
-| `P1[T1](v1 *T1, err) *T1` | 检查错误 + 指针非 nil，返回 1 个指针 |
-| `P2[T1,T2](v1 *T1, v2 *T2, err) (*T1,*T2)` | 检查错误 + 指针非 nil，返回 2 个指针 |
-| `P3` ~ `P9` | 检查错误 + 指针非 nil，返回 3-9 个指针 |
+| 函数                                       | 说明                                   |
+| ------------------------------------------ | -------------------------------------- |
+| `P1[T1](v1 *T1, err) *T1`                  | 检查错误 + 指针非 nil，返回 1 个指针   |
+| `P2[T1,T2](v1 *T1, v2 *T2, err) (*T1,*T2)` | 检查错误 + 指针非 nil，返回 2 个指针   |
+| `P3` ~ `P9`                                | 检查错误 + 指针非 nil，返回 3-9 个指针 |
 
 > **说明：** `P0` 与 `V0` 相同，建议使用 [must](https://github.com/yylego/must) 包进行简单错误检查。
 
 ### C 系列 - 可比较值验证
 
-| 函数 | 说明 |
-|------|------|
-| `C1[T1 comparable](v1 T1, err) T1` | 检查错误 + 值非零，返回 1 个值 |
-| `C2[T1,T2 comparable](v1 T1, v2 T2, err) (T1,T2)` | 检查错误 + 值非零，返回 2 个值 |
-| `C3` ~ `C9` | 检查错误 + 值非零，返回 3-9 个值 |
+| 函数                                              | 说明                             |
+| ------------------------------------------------- | -------------------------------- |
+| `C1[T1 comparable](v1 T1, err) T1`                | 检查错误 + 值非零，返回 1 个值   |
+| `C2[T1,T2 comparable](v1 T1, v2 T2, err) (T1,T2)` | 检查错误 + 值非零，返回 2 个值   |
+| `C3` ~ `C9`                                       | 检查错误 + 值非零，返回 3-9 个值 |
 
 > **说明：** `C0` 与 `V0` 相同，建议使用 [must](https://github.com/yylego/must) 包进行简单错误检查。
 
 ### A 系列 - 数组/切片验证
 
-| 函数 | 说明 |
-|------|------|
-| `A1[T1](v1 []T1, err) []T1` | 检查错误 + 切片非空，返回 1 个切片 |
-| `A2[T1,T2](v1 []T1, v2 []T2, err) ([]T1,[]T2)` | 检查错误 + 切片非空，返回 2 个切片 |
-| `A3` ~ `A9` | 检查错误 + 切片非空，返回 3-9 个切片 |
+| 函数                                           | 说明                                 |
+| ---------------------------------------------- | ------------------------------------ |
+| `A1[T1](v1 []T1, err) []T1`                    | 检查错误 + 切片非空，返回 1 个切片   |
+| `A2[T1,T2](v1 []T1, v2 []T2, err) ([]T1,[]T2)` | 检查错误 + 切片非空，返回 2 个切片   |
+| `A3` ~ `A9`                                    | 检查错误 + 切片非空，返回 3-9 个切片 |
 
 > **说明：** `A0` 与 `V0` 相同，建议使用 [must](https://github.com/yylego/must) 包进行简单错误检查。
 
 ### M 系列 - 映射验证
 
-| 函数 | 说明 |
-|------|------|
-| `M1[K1,V1](m1 map[K1]V1, err) map[K1]V1` | 检查错误 + 映射非空，返回 1 个映射 |
-| `M2[K1,K2,V1,V2](m1 map[K1]V1, m2 map[K2]V2, err) (map[K1]V1, map[K2]V2)` | 检查错误 + 映射非空，返回 2 个映射 |
-| `M3` ~ `M9` | 检查错误 + 映射非空，返回 3-9 个映射 |
+| 函数                                                                      | 说明                                 |
+| ------------------------------------------------------------------------- | ------------------------------------ |
+| `M1[K1,V1](m1 map[K1]V1, err) map[K1]V1`                                  | 检查错误 + 映射非空，返回 1 个映射   |
+| `M2[K1,K2,V1,V2](m1 map[K1]V1, m2 map[K2]V2, err) (map[K1]V1, map[K2]V2)` | 检查错误 + 映射非空，返回 2 个映射   |
+| `M3` ~ `M9`                                                               | 检查错误 + 映射非空，返回 3-9 个映射 |
 
 > **说明：** `M0` 与 `V0` 相同，建议使用 [must](https://github.com/yylego/must) 包进行简单错误检查。
 
 ### F 系列 - 函数执行（值）
 
-| 函数 | 说明 |
-|------|------|
-| `F1[T1](run func() (T1, error)) T1` | 执行函数，应用 V1 验证 |
-| `F2[T1,T2](run func() (T1, T2, error)) (T1,T2)` | 执行函数，应用 V2 验证 |
-| `F3` ~ `F9` | 执行函数，应用 V3-V9 验证 |
+| 函数                                            | 说明                      |
+| ----------------------------------------------- | ------------------------- |
+| `F1[T1](run func() (T1, error)) T1`             | 执行函数，应用 V1 验证    |
+| `F2[T1,T2](run func() (T1, T2, error)) (T1,T2)` | 执行函数，应用 V2 验证    |
+| `F3` ~ `F9`                                     | 执行函数，应用 V3-V9 验证 |
 
 > **说明：** `F0` 与 `V0` 相同，建议使用 [must](https://github.com/yylego/must) 包进行简单错误检查。
 
 ### R 系列 - 函数执行（指针）
 
-| 函数 | 说明 |
-|------|------|
-| `R1[T1](run func() (*T1, error)) *T1` | 执行函数，应用 P1 验证 |
-| `R2[T1,T2](run func() (*T1, *T2, error)) (*T1,*T2)` | 执行函数，应用 P2 验证 |
-| `R3` ~ `R9` | 执行函数，应用 P3-P9 验证 |
+| 函数                                                | 说明                      |
+| --------------------------------------------------- | ------------------------- |
+| `R1[T1](run func() (*T1, error)) *T1`               | 执行函数，应用 P1 验证    |
+| `R2[T1,T2](run func() (*T1, *T2, error)) (*T1,*T2)` | 执行函数，应用 P2 验证    |
+| `R3` ~ `R9`                                         | 执行函数，应用 P3-P9 验证 |
 
 > **说明：** `R0` 与 `V0` 相同，建议使用 [must](https://github.com/yylego/must) 包进行简单错误检查。
 
@@ -495,23 +515,23 @@ config := resb.V1(lookupConfig("host"))      // 键不存在时 panic
 ---
 
 <!-- TEMPLATE (ZH) BEGIN: STANDARD PROJECT FOOTER -->
-<!-- VERSION 2025-09-26 07:39:27.188023 +0000 UTC -->
+<!-- VERSION 2025-11-25 03:52:28.131064 +0000 UTC -->
 
 ## 📄 许可证类型
 
-MIT 许可证。详见 [LICENSE](LICENSE)。
+MIT 许可证 - 详见 [LICENSE](LICENSE)。
 
 ---
 
-## 🤝 项目贡献
+## 💬 联系与反馈
 
 非常欢迎贡献代码！报告 BUG、建议功能、贡献代码：
 
-- 🐛 **发现问题？** 在 GitHub 上提交问题并附上重现步骤
-- 💡 **功能建议？** 创建 issue 讨论您的想法
-- 📖 **文档疑惑？** 报告问题，帮助我们改进文档
+- 🐛 **问题报告？** 在 GitHub 上提交问题并附上重现步骤
+- 💡 **新颖思路？** 创建 issue 讨论
+- 📖 **文档疑惑？** 报告问题，帮助我们完善文档
 - 🚀 **需要功能？** 分享使用场景，帮助理解需求
-- ⚡ **性能瓶颈？** 报告慢操作，帮助我们优化性能
+- ⚡ **性能瓶颈？** 报告慢操作，协助解决性能问题
 - 🔧 **配置困扰？** 询问复杂设置的相关问题
 - 📢 **关注进展？** 关注仓库以获取新版本和功能
 - 🌟 **成功案例？** 分享这个包如何改善工作流程
@@ -524,12 +544,12 @@ MIT 许可证。详见 [LICENSE](LICENSE)。
 新代码贡献，请遵循此流程：
 
 1. **Fork**：在 GitHub 上 Fork 仓库（使用网页界面）
-2. **克隆**：克隆 Fork 的项目（`git clone https://github.com/yourname/rese.git`）
-3. **导航**：进入克隆的项目（`cd rese`）
+2. **克隆**：克隆 Fork 的项目（`git clone https://github.com/yourname/repo-name.git`）
+3. **导航**：进入克隆的项目（`cd repo-name`）
 4. **分支**：创建功能分支（`git checkout -b feature/xxx`）
 5. **编码**：实现您的更改并编写全面的测试
 6. **测试**：（Golang 项目）确保测试通过（`go test ./...`）并遵循 Go 代码风格约定
-7. **文档**：为面向用户的更改更新文档，并使用有意义的提交消息
+7. **文档**：面向用户的更改需要更新文档
 8. **暂存**：暂存更改（`git add .`）
 9. **提交**：提交更改（`git commit -m "Add feature xxx"`）确保向后兼容的代码
 10. **推送**：推送到分支（`git push origin feature/xxx`）
@@ -541,7 +561,7 @@ MIT 许可证。详见 [LICENSE](LICENSE)。
 
 ## 🌟 项目支持
 
-非常欢迎通过提交 Merge Request 和报告问题来为此项目做出贡献。
+非常欢迎通过提交 Merge Request 和报告问题来贡献此项目。
 
 **项目支持：**
 
@@ -552,10 +572,4 @@ MIT 许可证。详见 [LICENSE](LICENSE)。
 
 **祝你用这个包编程愉快！** 🎉🎉🎉
 
-<!-- TEMPLATE (ZH) END: STANDARD PROJECT FOOTER -->
-
----
-
-## GitHub Stars
-
-[![starring](https://starchart.cc/yylego/rese.svg?variant=adaptive)](https://starchart.cc/yylego/rese)
+<!-- TEMPLATE (ZH) CLOSE: STANDARD PROJECT FOOTER -->

@@ -10,8 +10,7 @@
 package rese
 
 import (
-	"github.com/yylego/done"
-	"github.com/yylego/must"
+	"github.com/yylego/rese/internal/resecheck"
 )
 
 // V0 checks error and panics if present
@@ -20,7 +19,7 @@ import (
 // V0 检查错误，如果存在则 panic
 // V0 场景建议使用 github.com/yylego/must 包
 func V0(err error) {
-	done.Done(err)
+	resecheck.Done(1, err)
 }
 
 // V1 checks error and returns single value
@@ -29,7 +28,7 @@ func V0(err error) {
 // V1 检查错误并返回单个值
 // 当有错误时 panic，没有错误时返回值
 func V1[T1 any](v1 T1, err error) T1 {
-	done.Done(err)
+	resecheck.Done(1, err)
 	return v1
 }
 
@@ -39,7 +38,7 @@ func V1[T1 any](v1 T1, err error) T1 {
 // V2 检查错误并返回两个值
 // 当有错误时 panic，没有错误时返回值
 func V2[T1, T2 any](v1 T1, v2 T2, err error) (T1, T2) {
-	done.Done(err)
+	resecheck.Done(1, err)
 	return v1, v2
 }
 
@@ -49,7 +48,7 @@ func V2[T1, T2 any](v1 T1, v2 T2, err error) (T1, T2) {
 // V3 检查错误并返回三个值
 // 当有错误时 panic，没有错误时返回值
 func V3[T1, T2, T3 any](v1 T1, v2 T2, v3 T3, err error) (T1, T2, T3) {
-	done.Done(err)
+	resecheck.Done(1, err)
 	return v1, v2, v3
 }
 
@@ -59,7 +58,7 @@ func V3[T1, T2, T3 any](v1 T1, v2 T2, v3 T3, err error) (T1, T2, T3) {
 // V4 检查错误并返回 4 个值
 // 当有错误时 panic，没有错误时返回值
 func V4[T1, T2, T3, T4 any](v1 T1, v2 T2, v3 T3, v4 T4, err error) (T1, T2, T3, T4) {
-	done.Done(err)
+	resecheck.Done(1, err)
 	return v1, v2, v3, v4
 }
 
@@ -69,7 +68,7 @@ func V4[T1, T2, T3, T4 any](v1 T1, v2 T2, v3 T3, v4 T4, err error) (T1, T2, T3, 
 // V5 检查错误并返回 5 个值
 // 当有错误时 panic，没有错误时返回值
 func V5[T1, T2, T3, T4, T5 any](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, err error) (T1, T2, T3, T4, T5) {
-	done.Done(err)
+	resecheck.Done(1, err)
 	return v1, v2, v3, v4, v5
 }
 
@@ -79,7 +78,7 @@ func V5[T1, T2, T3, T4, T5 any](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, err error) (T
 // V6 检查错误并返回 6 个值
 // 当有错误时 panic，没有错误时返回值
 func V6[T1, T2, T3, T4, T5, T6 any](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, err error) (T1, T2, T3, T4, T5, T6) {
-	done.Done(err)
+	resecheck.Done(1, err)
 	return v1, v2, v3, v4, v5, v6
 }
 
@@ -89,7 +88,7 @@ func V6[T1, T2, T3, T4, T5, T6 any](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, er
 // V7 检查错误并返回 7 个值
 // 当有错误时 panic，没有错误时返回值
 func V7[T1, T2, T3, T4, T5, T6, T7 any](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, err error) (T1, T2, T3, T4, T5, T6, T7) {
-	done.Done(err)
+	resecheck.Done(1, err)
 	return v1, v2, v3, v4, v5, v6, v7
 }
 
@@ -99,7 +98,7 @@ func V7[T1, T2, T3, T4, T5, T6, T7 any](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6
 // V8 检查错误并返回 8 个值
 // 当有错误时 panic，没有错误时返回值
 func V8[T1, T2, T3, T4, T5, T6, T7, T8 any](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, err error) (T1, T2, T3, T4, T5, T6, T7, T8) {
-	done.Done(err)
+	resecheck.Done(1, err)
 	return v1, v2, v3, v4, v5, v6, v7, v8
 }
 
@@ -109,7 +108,7 @@ func V8[T1, T2, T3, T4, T5, T6, T7, T8 any](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v
 // V9 检查错误并返回 9 个值
 // 当有错误时 panic，没有错误时返回值
 func V9[T1, T2, T3, T4, T5, T6, T7, T8, T9 any](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, err error) (T1, T2, T3, T4, T5, T6, T7, T8, T9) {
-	done.Done(err)
+	resecheck.Done(1, err)
 	return v1, v2, v3, v4, v5, v6, v7, v8, v9
 }
 
@@ -119,7 +118,7 @@ func V9[T1, T2, T3, T4, T5, T6, T7, T8, T9 any](v1 T1, v2 T2, v3 T3, v4 T4, v5 T
 // P0 检查错误，如果存在则 panic
 // P0 场景建议使用 github.com/yylego/must 包
 func P0(err error) {
-	done.Done(err)
+	resecheck.Done(1, err)
 }
 
 // P1 checks error and validates pointer is non-nil, returns single pointer
@@ -128,8 +127,8 @@ func P0(err error) {
 // P1 检查错误并验证指针非 nil，返回单个指针
 // 当有错误时 panic，当指针为 nil 时 panic
 func P1[T1 any](v1 *T1, err error) *T1 {
-	done.Done(err)
-	must.Full(v1)
+	resecheck.Done(1, err)
+	resecheck.Full(1, v1)
 	return v1
 }
 
@@ -139,9 +138,9 @@ func P1[T1 any](v1 *T1, err error) *T1 {
 // P2 检查错误并验证指针非 nil，返回两个指针
 // 当有错误时 panic，当某个指针为 nil 时 panic
 func P2[T1, T2 any](v1 *T1, v2 *T2, err error) (*T1, *T2) {
-	done.Done(err)
-	must.Full(v1)
-	must.Full(v2)
+	resecheck.Done(1, err)
+	resecheck.Full(1, v1)
+	resecheck.Full(1, v2)
 	return v1, v2
 }
 
@@ -151,10 +150,10 @@ func P2[T1, T2 any](v1 *T1, v2 *T2, err error) (*T1, *T2) {
 // P3 检查错误并验证指针非 nil，返回三个指针
 // 当有错误时 panic，当某个指针为 nil 时 panic
 func P3[T1, T2, T3 any](v1 *T1, v2 *T2, v3 *T3, err error) (*T1, *T2, *T3) {
-	done.Done(err)
-	must.Full(v1)
-	must.Full(v2)
-	must.Full(v3)
+	resecheck.Done(1, err)
+	resecheck.Full(1, v1)
+	resecheck.Full(1, v2)
+	resecheck.Full(1, v3)
 	return v1, v2, v3
 }
 
@@ -164,11 +163,11 @@ func P3[T1, T2, T3 any](v1 *T1, v2 *T2, v3 *T3, err error) (*T1, *T2, *T3) {
 // P4 检查错误并验证指针非 nil，返回 4 个指针
 // 当有错误时 panic，当某个指针为 nil 时 panic
 func P4[T1, T2, T3, T4 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, err error) (*T1, *T2, *T3, *T4) {
-	done.Done(err)
-	must.Full(v1)
-	must.Full(v2)
-	must.Full(v3)
-	must.Full(v4)
+	resecheck.Done(1, err)
+	resecheck.Full(1, v1)
+	resecheck.Full(1, v2)
+	resecheck.Full(1, v3)
+	resecheck.Full(1, v4)
 	return v1, v2, v3, v4
 }
 
@@ -178,12 +177,12 @@ func P4[T1, T2, T3, T4 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, err error) (*T1, *T2
 // P5 检查错误并验证指针非 nil，返回 5 个指针
 // 当有错误时 panic，当某个指针为 nil 时 panic
 func P5[T1, T2, T3, T4, T5 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, v5 *T5, err error) (*T1, *T2, *T3, *T4, *T5) {
-	done.Done(err)
-	must.Full(v1)
-	must.Full(v2)
-	must.Full(v3)
-	must.Full(v4)
-	must.Full(v5)
+	resecheck.Done(1, err)
+	resecheck.Full(1, v1)
+	resecheck.Full(1, v2)
+	resecheck.Full(1, v3)
+	resecheck.Full(1, v4)
+	resecheck.Full(1, v5)
 	return v1, v2, v3, v4, v5
 }
 
@@ -193,13 +192,13 @@ func P5[T1, T2, T3, T4, T5 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, v5 *T5, err erro
 // P6 检查错误并验证指针非 nil，返回 6 个指针
 // 当有错误时 panic，当某个指针为 nil 时 panic
 func P6[T1, T2, T3, T4, T5, T6 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, v5 *T5, v6 *T6, err error) (*T1, *T2, *T3, *T4, *T5, *T6) {
-	done.Done(err)
-	must.Full(v1)
-	must.Full(v2)
-	must.Full(v3)
-	must.Full(v4)
-	must.Full(v5)
-	must.Full(v6)
+	resecheck.Done(1, err)
+	resecheck.Full(1, v1)
+	resecheck.Full(1, v2)
+	resecheck.Full(1, v3)
+	resecheck.Full(1, v4)
+	resecheck.Full(1, v5)
+	resecheck.Full(1, v6)
 	return v1, v2, v3, v4, v5, v6
 }
 
@@ -209,14 +208,14 @@ func P6[T1, T2, T3, T4, T5, T6 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, v5 *T5, v6 *
 // P7 检查错误并验证指针非 nil，返回 7 个指针
 // 当有错误时 panic，当某个指针为 nil 时 panic
 func P7[T1, T2, T3, T4, T5, T6, T7 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, v5 *T5, v6 *T6, v7 *T7, err error) (*T1, *T2, *T3, *T4, *T5, *T6, *T7) {
-	done.Done(err)
-	must.Full(v1)
-	must.Full(v2)
-	must.Full(v3)
-	must.Full(v4)
-	must.Full(v5)
-	must.Full(v6)
-	must.Full(v7)
+	resecheck.Done(1, err)
+	resecheck.Full(1, v1)
+	resecheck.Full(1, v2)
+	resecheck.Full(1, v3)
+	resecheck.Full(1, v4)
+	resecheck.Full(1, v5)
+	resecheck.Full(1, v6)
+	resecheck.Full(1, v7)
 	return v1, v2, v3, v4, v5, v6, v7
 }
 
@@ -226,15 +225,15 @@ func P7[T1, T2, T3, T4, T5, T6, T7 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, v5 *T5, 
 // P8 检查错误并验证指针非 nil，返回 8 个指针
 // 当有错误时 panic，当某个指针为 nil 时 panic
 func P8[T1, T2, T3, T4, T5, T6, T7, T8 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, v5 *T5, v6 *T6, v7 *T7, v8 *T8, err error) (*T1, *T2, *T3, *T4, *T5, *T6, *T7, *T8) {
-	done.Done(err)
-	must.Full(v1)
-	must.Full(v2)
-	must.Full(v3)
-	must.Full(v4)
-	must.Full(v5)
-	must.Full(v6)
-	must.Full(v7)
-	must.Full(v8)
+	resecheck.Done(1, err)
+	resecheck.Full(1, v1)
+	resecheck.Full(1, v2)
+	resecheck.Full(1, v3)
+	resecheck.Full(1, v4)
+	resecheck.Full(1, v5)
+	resecheck.Full(1, v6)
+	resecheck.Full(1, v7)
+	resecheck.Full(1, v8)
 	return v1, v2, v3, v4, v5, v6, v7, v8
 }
 
@@ -244,16 +243,16 @@ func P8[T1, T2, T3, T4, T5, T6, T7, T8 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, v5 *
 // P9 检查错误并验证指针非 nil，返回 9 个指针
 // 当有错误时 panic，当某个指针为 nil 时 panic
 func P9[T1, T2, T3, T4, T5, T6, T7, T8, T9 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, v5 *T5, v6 *T6, v7 *T7, v8 *T8, v9 *T9, err error) (*T1, *T2, *T3, *T4, *T5, *T6, *T7, *T8, *T9) {
-	done.Done(err)
-	must.Full(v1)
-	must.Full(v2)
-	must.Full(v3)
-	must.Full(v4)
-	must.Full(v5)
-	must.Full(v6)
-	must.Full(v7)
-	must.Full(v8)
-	must.Full(v9)
+	resecheck.Done(1, err)
+	resecheck.Full(1, v1)
+	resecheck.Full(1, v2)
+	resecheck.Full(1, v3)
+	resecheck.Full(1, v4)
+	resecheck.Full(1, v5)
+	resecheck.Full(1, v6)
+	resecheck.Full(1, v7)
+	resecheck.Full(1, v8)
+	resecheck.Full(1, v9)
 	return v1, v2, v3, v4, v5, v6, v7, v8, v9
 }
 
@@ -263,7 +262,7 @@ func P9[T1, T2, T3, T4, T5, T6, T7, T8, T9 any](v1 *T1, v2 *T2, v3 *T3, v4 *T4, 
 // C0 检查错误，如果存在则 panic
 // C0 场景建议使用 github.com/yylego/must 包
 func C0(err error) {
-	done.Done(err)
+	resecheck.Done(1, err)
 }
 
 // C1 checks error and value non-zero, returns single comparable value
@@ -272,8 +271,8 @@ func C0(err error) {
 // C1 检查错误和值非零，返回单个可比较值
 // 当有错误时 panic，当值为零时 panic
 func C1[T1 comparable](v1 T1, err error) T1 {
-	done.Done(err)
-	must.Nice(v1)
+	resecheck.Done(1, err)
+	resecheck.Nice(1, v1)
 	return v1
 }
 
@@ -283,9 +282,9 @@ func C1[T1 comparable](v1 T1, err error) T1 {
 // C2 检查错误和值非零，返回两个可比较值
 // 当有错误时 panic，当某个值为零时 panic
 func C2[T1, T2 comparable](v1 T1, v2 T2, err error) (T1, T2) {
-	done.Done(err)
-	must.Nice(v1)
-	must.Nice(v2)
+	resecheck.Done(1, err)
+	resecheck.Nice(1, v1)
+	resecheck.Nice(1, v2)
 	return v1, v2
 }
 
@@ -295,10 +294,10 @@ func C2[T1, T2 comparable](v1 T1, v2 T2, err error) (T1, T2) {
 // C3 检查错误和值非零，返回三个可比较值
 // 当有错误时 panic，当某个值为零时 panic
 func C3[T1, T2, T3 comparable](v1 T1, v2 T2, v3 T3, err error) (T1, T2, T3) {
-	done.Done(err)
-	must.Nice(v1)
-	must.Nice(v2)
-	must.Nice(v3)
+	resecheck.Done(1, err)
+	resecheck.Nice(1, v1)
+	resecheck.Nice(1, v2)
+	resecheck.Nice(1, v3)
 	return v1, v2, v3
 }
 
@@ -308,11 +307,11 @@ func C3[T1, T2, T3 comparable](v1 T1, v2 T2, v3 T3, err error) (T1, T2, T3) {
 // C4 检查错误和值非零，返回 4 个可比较值
 // 当有错误时 panic，当某个值为零时 panic
 func C4[T1, T2, T3, T4 comparable](v1 T1, v2 T2, v3 T3, v4 T4, err error) (T1, T2, T3, T4) {
-	done.Done(err)
-	must.Nice(v1)
-	must.Nice(v2)
-	must.Nice(v3)
-	must.Nice(v4)
+	resecheck.Done(1, err)
+	resecheck.Nice(1, v1)
+	resecheck.Nice(1, v2)
+	resecheck.Nice(1, v3)
+	resecheck.Nice(1, v4)
 	return v1, v2, v3, v4
 }
 
@@ -322,12 +321,12 @@ func C4[T1, T2, T3, T4 comparable](v1 T1, v2 T2, v3 T3, v4 T4, err error) (T1, T
 // C5 检查错误和值非零，返回五个可比较值
 // 当有错误时 panic，当某个值为零时 panic
 func C5[T1, T2, T3, T4, T5 comparable](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, err error) (T1, T2, T3, T4, T5) {
-	done.Done(err)
-	must.Nice(v1)
-	must.Nice(v2)
-	must.Nice(v3)
-	must.Nice(v4)
-	must.Nice(v5)
+	resecheck.Done(1, err)
+	resecheck.Nice(1, v1)
+	resecheck.Nice(1, v2)
+	resecheck.Nice(1, v3)
+	resecheck.Nice(1, v4)
+	resecheck.Nice(1, v5)
 	return v1, v2, v3, v4, v5
 }
 
@@ -337,13 +336,13 @@ func C5[T1, T2, T3, T4, T5 comparable](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, err er
 // C6 检查错误和值非零，返回六个可比较值
 // 当有错误时 panic，当某个值为零时 panic
 func C6[T1, T2, T3, T4, T5, T6 comparable](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, err error) (T1, T2, T3, T4, T5, T6) {
-	done.Done(err)
-	must.Nice(v1)
-	must.Nice(v2)
-	must.Nice(v3)
-	must.Nice(v4)
-	must.Nice(v5)
-	must.Nice(v6)
+	resecheck.Done(1, err)
+	resecheck.Nice(1, v1)
+	resecheck.Nice(1, v2)
+	resecheck.Nice(1, v3)
+	resecheck.Nice(1, v4)
+	resecheck.Nice(1, v5)
+	resecheck.Nice(1, v6)
 	return v1, v2, v3, v4, v5, v6
 }
 
@@ -353,14 +352,14 @@ func C6[T1, T2, T3, T4, T5, T6 comparable](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6
 // C7 检查错误和值非零，返回七个可比较值
 // 当有错误时 panic，当某个值为零时 panic
 func C7[T1, T2, T3, T4, T5, T6, T7 comparable](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, err error) (T1, T2, T3, T4, T5, T6, T7) {
-	done.Done(err)
-	must.Nice(v1)
-	must.Nice(v2)
-	must.Nice(v3)
-	must.Nice(v4)
-	must.Nice(v5)
-	must.Nice(v6)
-	must.Nice(v7)
+	resecheck.Done(1, err)
+	resecheck.Nice(1, v1)
+	resecheck.Nice(1, v2)
+	resecheck.Nice(1, v3)
+	resecheck.Nice(1, v4)
+	resecheck.Nice(1, v5)
+	resecheck.Nice(1, v6)
+	resecheck.Nice(1, v7)
 	return v1, v2, v3, v4, v5, v6, v7
 }
 
@@ -370,15 +369,15 @@ func C7[T1, T2, T3, T4, T5, T6, T7 comparable](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5
 // C8 检查错误和值非零，返回八个可比较值
 // 当有错误时 panic，当某个值为零时 panic
 func C8[T1, T2, T3, T4, T5, T6, T7, T8 comparable](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, err error) (T1, T2, T3, T4, T5, T6, T7, T8) {
-	done.Done(err)
-	must.Nice(v1)
-	must.Nice(v2)
-	must.Nice(v3)
-	must.Nice(v4)
-	must.Nice(v5)
-	must.Nice(v6)
-	must.Nice(v7)
-	must.Nice(v8)
+	resecheck.Done(1, err)
+	resecheck.Nice(1, v1)
+	resecheck.Nice(1, v2)
+	resecheck.Nice(1, v3)
+	resecheck.Nice(1, v4)
+	resecheck.Nice(1, v5)
+	resecheck.Nice(1, v6)
+	resecheck.Nice(1, v7)
+	resecheck.Nice(1, v8)
 	return v1, v2, v3, v4, v5, v6, v7, v8
 }
 
@@ -388,16 +387,16 @@ func C8[T1, T2, T3, T4, T5, T6, T7, T8 comparable](v1 T1, v2 T2, v3 T3, v4 T4, v
 // C9 检查错误和值非零，返回九个可比较值
 // 当有错误时 panic，当某个值为零时 panic
 func C9[T1, T2, T3, T4, T5, T6, T7, T8, T9 comparable](v1 T1, v2 T2, v3 T3, v4 T4, v5 T5, v6 T6, v7 T7, v8 T8, v9 T9, err error) (T1, T2, T3, T4, T5, T6, T7, T8, T9) {
-	done.Done(err)
-	must.Nice(v1)
-	must.Nice(v2)
-	must.Nice(v3)
-	must.Nice(v4)
-	must.Nice(v5)
-	must.Nice(v6)
-	must.Nice(v7)
-	must.Nice(v8)
-	must.Nice(v9)
+	resecheck.Done(1, err)
+	resecheck.Nice(1, v1)
+	resecheck.Nice(1, v2)
+	resecheck.Nice(1, v3)
+	resecheck.Nice(1, v4)
+	resecheck.Nice(1, v5)
+	resecheck.Nice(1, v6)
+	resecheck.Nice(1, v7)
+	resecheck.Nice(1, v8)
+	resecheck.Nice(1, v9)
 	return v1, v2, v3, v4, v5, v6, v7, v8, v9
 }
 
@@ -407,7 +406,7 @@ func C9[T1, T2, T3, T4, T5, T6, T7, T8, T9 comparable](v1 T1, v2 T2, v3 T3, v4 T
 // A0 检查错误，如果存在则 panic
 // A0 场景建议使用 github.com/yylego/must 包
 func A0(err error) {
-	done.Done(err)
+	resecheck.Done(1, err)
 }
 
 // A1 checks error and validates slice has elements, returns single slice
@@ -416,8 +415,8 @@ func A0(err error) {
 // A1 检查错误并验证切片有元素，返回单个切片
 // 当有错误时 panic，当切片为 nil/无元素时 panic
 func A1[T1 any](v1 []T1, err error) []T1 {
-	done.Done(err)
-	must.Have(v1)
+	resecheck.Done(1, err)
+	resecheck.Have(1, v1)
 	return v1
 }
 
@@ -427,9 +426,9 @@ func A1[T1 any](v1 []T1, err error) []T1 {
 // A2 检查错误和切片非空，返回两个切片
 // 当有错误时 panic，当某个切片为 nil/无元素时 panic
 func A2[T1, T2 any](v1 []T1, v2 []T2, err error) ([]T1, []T2) {
-	done.Done(err)
-	must.Have(v1)
-	must.Have(v2)
+	resecheck.Done(1, err)
+	resecheck.Have(1, v1)
+	resecheck.Have(1, v2)
 	return v1, v2
 }
 
@@ -439,10 +438,10 @@ func A2[T1, T2 any](v1 []T1, v2 []T2, err error) ([]T1, []T2) {
 // A3 检查错误和切片非空，返回三个切片
 // 当有错误时 panic，当某个切片为 nil/无元素时 panic
 func A3[T1, T2, T3 any](v1 []T1, v2 []T2, v3 []T3, err error) ([]T1, []T2, []T3) {
-	done.Done(err)
-	must.Have(v1)
-	must.Have(v2)
-	must.Have(v3)
+	resecheck.Done(1, err)
+	resecheck.Have(1, v1)
+	resecheck.Have(1, v2)
+	resecheck.Have(1, v3)
 	return v1, v2, v3
 }
 
@@ -452,11 +451,11 @@ func A3[T1, T2, T3 any](v1 []T1, v2 []T2, v3 []T3, err error) ([]T1, []T2, []T3)
 // A4 检查错误和切片非空，返回 4 个切片
 // 当有错误时 panic，当某个切片为 nil/无元素时 panic
 func A4[T1, T2, T3, T4 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, err error) ([]T1, []T2, []T3, []T4) {
-	done.Done(err)
-	must.Have(v1)
-	must.Have(v2)
-	must.Have(v3)
-	must.Have(v4)
+	resecheck.Done(1, err)
+	resecheck.Have(1, v1)
+	resecheck.Have(1, v2)
+	resecheck.Have(1, v3)
+	resecheck.Have(1, v4)
 	return v1, v2, v3, v4
 }
 
@@ -466,12 +465,12 @@ func A4[T1, T2, T3, T4 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, err error) ([]T1
 // A5 检查错误和切片非空，返回五个切片
 // 当有错误时 panic，当某个切片为 nil/无元素时 panic
 func A5[T1, T2, T3, T4, T5 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, v5 []T5, err error) ([]T1, []T2, []T3, []T4, []T5) {
-	done.Done(err)
-	must.Have(v1)
-	must.Have(v2)
-	must.Have(v3)
-	must.Have(v4)
-	must.Have(v5)
+	resecheck.Done(1, err)
+	resecheck.Have(1, v1)
+	resecheck.Have(1, v2)
+	resecheck.Have(1, v3)
+	resecheck.Have(1, v4)
+	resecheck.Have(1, v5)
 	return v1, v2, v3, v4, v5
 }
 
@@ -481,13 +480,13 @@ func A5[T1, T2, T3, T4, T5 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, v5 []T5, err
 // A6 检查错误和切片非空，返回六个切片
 // 当有错误时 panic，当某个切片为 nil/无元素时 panic
 func A6[T1, T2, T3, T4, T5, T6 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, v5 []T5, v6 []T6, err error) ([]T1, []T2, []T3, []T4, []T5, []T6) {
-	done.Done(err)
-	must.Have(v1)
-	must.Have(v2)
-	must.Have(v3)
-	must.Have(v4)
-	must.Have(v5)
-	must.Have(v6)
+	resecheck.Done(1, err)
+	resecheck.Have(1, v1)
+	resecheck.Have(1, v2)
+	resecheck.Have(1, v3)
+	resecheck.Have(1, v4)
+	resecheck.Have(1, v5)
+	resecheck.Have(1, v6)
 	return v1, v2, v3, v4, v5, v6
 }
 
@@ -497,14 +496,14 @@ func A6[T1, T2, T3, T4, T5, T6 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, v5 []T5,
 // A7 检查错误和切片非空，返回七个切片
 // 当有错误时 panic，当某个切片为 nil/无元素时 panic
 func A7[T1, T2, T3, T4, T5, T6, T7 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, v5 []T5, v6 []T6, v7 []T7, err error) ([]T1, []T2, []T3, []T4, []T5, []T6, []T7) {
-	done.Done(err)
-	must.Have(v1)
-	must.Have(v2)
-	must.Have(v3)
-	must.Have(v4)
-	must.Have(v5)
-	must.Have(v6)
-	must.Have(v7)
+	resecheck.Done(1, err)
+	resecheck.Have(1, v1)
+	resecheck.Have(1, v2)
+	resecheck.Have(1, v3)
+	resecheck.Have(1, v4)
+	resecheck.Have(1, v5)
+	resecheck.Have(1, v6)
+	resecheck.Have(1, v7)
 	return v1, v2, v3, v4, v5, v6, v7
 }
 
@@ -514,15 +513,15 @@ func A7[T1, T2, T3, T4, T5, T6, T7 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, v5 [
 // A8 检查错误和切片非空，返回八个切片
 // 当有错误时 panic，当某个切片为 nil/无元素时 panic
 func A8[T1, T2, T3, T4, T5, T6, T7, T8 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, v5 []T5, v6 []T6, v7 []T7, v8 []T8, err error) ([]T1, []T2, []T3, []T4, []T5, []T6, []T7, []T8) {
-	done.Done(err)
-	must.Have(v1)
-	must.Have(v2)
-	must.Have(v3)
-	must.Have(v4)
-	must.Have(v5)
-	must.Have(v6)
-	must.Have(v7)
-	must.Have(v8)
+	resecheck.Done(1, err)
+	resecheck.Have(1, v1)
+	resecheck.Have(1, v2)
+	resecheck.Have(1, v3)
+	resecheck.Have(1, v4)
+	resecheck.Have(1, v5)
+	resecheck.Have(1, v6)
+	resecheck.Have(1, v7)
+	resecheck.Have(1, v8)
 	return v1, v2, v3, v4, v5, v6, v7, v8
 }
 
@@ -532,15 +531,15 @@ func A8[T1, T2, T3, T4, T5, T6, T7, T8 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, 
 // A9 检查错误和切片非空，返回九个切片
 // 当有错误时 panic，当某个切片为 nil/无元素时 panic
 func A9[T1, T2, T3, T4, T5, T6, T7, T8, T9 any](v1 []T1, v2 []T2, v3 []T3, v4 []T4, v5 []T5, v6 []T6, v7 []T7, v8 []T8, v9 []T9, err error) ([]T1, []T2, []T3, []T4, []T5, []T6, []T7, []T8, []T9) {
-	done.Done(err)
-	must.Have(v1)
-	must.Have(v2)
-	must.Have(v3)
-	must.Have(v4)
-	must.Have(v5)
-	must.Have(v6)
-	must.Have(v7)
-	must.Have(v8)
-	must.Have(v9)
+	resecheck.Done(1, err)
+	resecheck.Have(1, v1)
+	resecheck.Have(1, v2)
+	resecheck.Have(1, v3)
+	resecheck.Have(1, v4)
+	resecheck.Have(1, v5)
+	resecheck.Have(1, v6)
+	resecheck.Have(1, v7)
+	resecheck.Have(1, v8)
+	resecheck.Have(1, v9)
 	return v1, v2, v3, v4, v5, v6, v7, v8, v9
 }

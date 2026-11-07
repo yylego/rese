@@ -1,6 +1,9 @@
 package rese_test
 
 import (
+	"io/fs"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -15,6 +18,14 @@ func TestF0(t *testing.T) {
 	rese.F0(run)
 }
 
+func TestF0_WithError(t *testing.T) {
+	run := func() error {
+		return os.Remove(filepath.Join(t.TempDir(), "missing.txt"))
+	}
+
+	require.ErrorIs(t, expectPanic(t, func() { rese.F0(run) }), fs.ErrNotExist)
+}
+
 func TestF1(t *testing.T) {
 	run := func() (int, error) {
 		return 100, nil
@@ -22,6 +33,14 @@ func TestF1(t *testing.T) {
 
 	v1 := rese.F1(run)
 	require.Equal(t, 100, v1)
+}
+
+func TestF1_WithError(t *testing.T) {
+	run := func() (os.FileInfo, error) {
+		return statMissing(t)
+	}
+
+	require.ErrorIs(t, expectPanic(t, func() { rese.F1(run) }), fs.ErrNotExist)
 }
 
 func TestF2(t *testing.T) {
@@ -148,6 +167,14 @@ func TestR1(t *testing.T) {
 
 	p1 := rese.R1(run)
 	require.Equal(t, "hello", *p1)
+}
+
+func TestR1_WithNil(t *testing.T) {
+	run := func() (*string, error) {
+		return nil, nil // Found nothing, and no error // 什么也没找到，也没出错
+	}
+
+	require.Error(t, expectPanic(t, func() { rese.R1(run) }))
 }
 
 func TestR2(t *testing.T) {

@@ -24,6 +24,14 @@ func TestM1(t *testing.T) {
 	require.Equal(t, map[int]string{0: "a"}, m1)
 }
 
+func TestM1_WithNoEntries(t *testing.T) {
+	run := func() (map[int]string, error) {
+		return map[int]string{}, nil
+	}
+
+	require.Error(t, expectPanic(t, func() { rese.M1(run()) }))
+}
+
 func TestM2(t *testing.T) {
 	run := func() (map[int]string, map[string]int, error) {
 		return map[int]string{3: "a"}, map[string]int{"x": 1}, nil
